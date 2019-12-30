@@ -35,7 +35,7 @@ sudo echo 'source <(kubectl completion bash)' | tee -a /root/.bashrc /home/ec2-u
 sudo chown ec2-user:ec2-user /usr/share/bash-completion/bash_completion
 
 # Load profile
-sudo source ~/.bashrc
+source ~/.bashrc
 
 # Installing kubectx kubens helm
 sudo git clone https://github.com/ahmetb/kubectx /opt/kubectx
@@ -44,6 +44,10 @@ sudo ln -s /opt/kubectx/kubens /usr/local/bin/kubens
 sudo curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
 sudo chmod 700 get_helm.sh
 sudo ./get_helm.sh
+helm repo add incubator https://kubernetes-charts-incubator.storage.googleapis.com/
+helm repo update
+# The other repo does not contain the nginx-controller as of this moment.
+sudo sudo mkdir -p /var/tmp/helm && git clone https://github.com/helm/charts.git /var/tmp/helm
 
 # Install kubectl, kubeadm, docker
 sudo echo [kubernetes] > /etc/yum.repos.d/kubernetes.repo
@@ -150,3 +154,6 @@ roleRef:
 EOF
 sudo kubectl apply -f ~/.cluster_bootstrap_permissions
 sudo rm -rf ~/.cluster_bootstrap_permissions
+
+# Provision the ingress controllerManager. The default helm repo does not contain the Chart for the nginx-ingress controller.
+helm install /var/tmp/helm/stable/nginx-ingress --set controller.publishService.enabled='$(POD_NAMESPACE)/ingress' --generate-name

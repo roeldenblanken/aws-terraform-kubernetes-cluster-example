@@ -8,6 +8,7 @@ variable "database_name" {}
 variable "database_user" {}
 variable "database_password" {}
 variable "database_port" {}
+variable "bastion_instance_size" {}
 variable "master_instance_type" {}
 variable "worker_instance_type" {}
 variable "asg_worker_nodes_min_size" {}

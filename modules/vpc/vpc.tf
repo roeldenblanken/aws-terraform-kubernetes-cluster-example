@@ -73,6 +73,14 @@ resource "aws_security_group" "bastion-public-subnet-sg" {
     cidr_blocks = [var.admin_workstation_ip]
   }
 
+  # For testing purposes allow connections from Lambda network segment.
+  ingress {
+    protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
   // Terraform removes the default rule.
   egress {
     protocol    = "-1"
@@ -213,6 +221,15 @@ resource "aws_security_group" "k8s-worker-nodes-private-subnet-sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  # Watch out for circular references
+  # Traffic to exec into the containers in order to debug
+  ingress {
+    protocol    = "tcp"
+    from_port   = 10250
+    to_port     = 10250
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
   # For testing purposes for connecting ssh to test ec2 instance from bastion host.
   ingress {
     protocol    = "tcp"
@@ -327,6 +344,29 @@ resource "aws_security_group" "database-private-subnet-sg" {
 
   tags = {
     Name        = "${local.my_name}-database-private-subnet-sg"
+    Deployment  = "${local.my_deployment}"
+    Prefix      = "${var.prefix}"
+    Environment = "${var.env}"
+    Region      = "${var.region}"
+    Terraform   = "true"
+  }
+}
+
+resource "aws_security_group" "k8s-deployer-lambda-private-subnet-sg" {
+  name        = "${local.my_name}-k8s-deployer-lambda-private-subnet-sg"
+  description = "Allow no inbound access"
+  vpc_id      = aws_vpc.vpc.id
+
+  // Terraform removes the default rule.
+  egress {
+    protocol    = "-1"
+    from_port   = 0
+    to_port     = 0
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name        = "${local.my_name}-k8s-deployer-lambda-private-subnet-sg"
     Deployment  = "${local.my_deployment}"
     Prefix      = "${var.prefix}"
     Environment = "${var.env}"

@@ -53,6 +53,11 @@ output "database_private_subnet_sg_id" {
   value = "${aws_security_group.database-private-subnet-sg.id}"
 }
 
+output "k8s_deployer_lambda_private_subnet_sg_id" {
+  value = "${aws_security_group.k8s-deployer-lambda-private-subnet-sg.id}"
+}
+
+
 output "public_subnet_route_table_id" {
   value = "${aws_route_table.public-subnet-route-table.id}"
 }

@@ -29,6 +29,7 @@ locals {
   database_name     		= "databaseblankia"
   database_user 			= "admin"
   database_port             = "3306"
+  bastion_instance_size 	= "t2.medium"
   master_instance_type	    = "t2.medium"
   worker_instance_type	    = "t2.medium"
   asg_worker_nodes_min_size	= 1
@@ -79,6 +80,7 @@ module "env-def" {
   database_user 			= "${local.database_user}"
   database_password 		= data.aws_ssm_parameter.DB_PASSWORD.value
   database_port             = "${local.database_port}"
+  bastion_instance_size		= "${local.bastion_instance_size}"
   master_instance_type		= "${local.master_instance_type}"
   worker_instance_type		= "${local.worker_instance_type}" 
   asg_worker_nodes_min_size	= "${local.asg_worker_nodes_min_size}"

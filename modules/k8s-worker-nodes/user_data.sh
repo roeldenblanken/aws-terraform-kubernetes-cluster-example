@@ -17,7 +17,7 @@ sudo echo 'source <(kubectl completion bash)' | tee -a /root/.bashrc /home/ec2-u
 sudo chown ec2-user:ec2-user /usr/share/bash-completion/bash_completion
 
 # Load profile
-sudo source ~/.bashrc
+source ~/.bashrc
 
 # Install kubectl, docker
 sudo echo [kubernetes] > /etc/yum.repos.d/kubernetes.repo
