@@ -95,9 +95,9 @@ data "aws_ami" "latest_aws_linux_2_ami" {
 data "template_file" "bastion_user_data" {
   template = file("../../modules/bastion/user_data.sh")
   vars = {
-    master_private_ip_addr				= var.master_private_ip_addr
-	k8s_deployer_lambda_name			= var.k8s_deployer_lambda_name
-	k8s_deployer_lambda_python_run_time = var.k8s_deployer_lambda_python_run_time
+    master_private_ip_addr              = var.master_private_ip_addr
+    k8s_deployer_lambda_name            = var.k8s_deployer_lambda_name
+    k8s_deployer_lambda_python_run_time = var.k8s_deployer_lambda_python_run_time
   }
 }
 

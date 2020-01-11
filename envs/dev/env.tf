@@ -26,14 +26,14 @@ locals {
   vpc_cidr_block            = "10.20.0.0/16"
   private_subnet_count      = "2"
   app_port                  = "8080"
-  database_name     		= "databaseblankia"
-  database_user 			= "admin"
+  database_name             = "databaseblankia"
+  database_user             = "admin"
   database_port             = "3306"
-  bastion_instance_size 	= "t2.medium"
+  bastion_instance_size     = "t2.medium"
   master_instance_type	    = "t2.medium"
   worker_instance_type	    = "t2.medium"
-  asg_worker_nodes_min_size	= 1
-  asg_worker_nodes_max_size	= 2
+  asg_worker_nodes_min_size = 1
+  asg_worker_nodes_max_size = 2
 }
 
 # NOTE: You cannot use locals in the terraform configuration since terraform
@@ -76,13 +76,13 @@ module "env-def" {
   vpc_cidr_block            = "${local.vpc_cidr_block}"
   private_subnet_count      = "${local.private_subnet_count}"
   admin_workstation_ip      = "${var.admin_workstation_ip}"
-  database_name     		= "${local.database_name}"
-  database_user 			= "${local.database_user}"
-  database_password 		= data.aws_ssm_parameter.DB_PASSWORD.value
+  database_name             = "${local.database_name}"
+  database_user             = "${local.database_user}"
+  database_password         = data.aws_ssm_parameter.DB_PASSWORD.value
   database_port             = "${local.database_port}"
-  bastion_instance_size		= "${local.bastion_instance_size}"
-  master_instance_type		= "${local.master_instance_type}"
-  worker_instance_type		= "${local.worker_instance_type}" 
-  asg_worker_nodes_min_size	= "${local.asg_worker_nodes_min_size}"
-  asg_worker_nodes_max_size	= "${local.asg_worker_nodes_max_size}"
+  bastion_instance_size	    = "${local.bastion_instance_size}"
+  master_instance_type	    = "${local.master_instance_type}"
+  worker_instance_type	    = "${local.worker_instance_type}"
+  asg_worker_nodes_min_size = "${local.asg_worker_nodes_min_size}"
+  asg_worker_nodes_max_size = "${local.asg_worker_nodes_max_size}"
 }

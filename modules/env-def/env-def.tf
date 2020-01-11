@@ -55,13 +55,13 @@ module "bastion" {
   source                       = "../bastion"
   prefix                       = "${var.prefix}"
   env                          = "${var.env}"
-  bastion_instance_size		   = "${var.bastion_instance_size}" 
+  bastion_instance_size        = "${var.bastion_instance_size}"
   master_private_ip_addr       = module.master-nodes.master_private_ip_addr
   region                       = "${var.region}"
   public_subnet_ids            = "${module.vpc.public_subnet_ids}"
   bastion-public-subnet_sg_id  = "${module.vpc.bastion_public_subnet_sg_id}"
-  k8s_deployer_lambda_name	   = module.lambda.k8s_deployer_lambda_name
-  k8s_deployer_lambda_arn	   = module.lambda.k8s_deployer_lambda_arn
+  k8s_deployer_lambda_name     = module.lambda.k8s_deployer_lambda_name
+  k8s_deployer_lambda_arn      = module.lambda.k8s_deployer_lambda_arn
   k8s_deployer_lambda_python_run_time = "${local.k8s_deployer_lambda_python_run_time}"
 }
 /*
@@ -71,42 +71,42 @@ module "rds" {
   prefix                       = "${var.prefix}"
   env                          = "${var.env}"
   region                       = "${var.region}"
-  private_subnet_az_names  	   = "${module.vpc.private_subnet_availability_zones}"
-  private_subnet_ids       	   = "${module.vpc.private_subnet_ids}"
+  private_subnet_az_names      = "${module.vpc.private_subnet_availability_zones}"
+  private_subnet_ids           = "${module.vpc.private_subnet_ids}"
   vpc_id                       = "${module.vpc.vpc_id}"
   aws_account_id               = "${data.aws_caller_identity.current.account_id}"
   database_private_subnet_sg_id= "${module.vpc.database_private_subnet_sg_id}"
-  database_name     		   = "${var.database_name}"
-  database_user 			   = "${var.database_user}"
-  database_password 		   = "${var.database_password}"
+  database_name                = "${var.database_name}"
+  database_user                = "${var.database_user}"
+  database_password            = "${var.database_password}"
   database_port                = "${var.database_port}"
 }
 */
 # This is the actual kubernetes master nodes module which creates master nodes
 module "master-nodes" {
-  source                       			= "../k8s-master-nodes"
-  prefix                       			= "${var.prefix}"
-  env                          			= "${var.env}"
-  region                       			= "${var.region}"
-  master_instance_type	    		    = var.master_instance_type
-  private_subnet_ids            		= "${module.vpc.private_subnet_ids}"
+  source                                = "../k8s-master-nodes"
+  prefix                                = "${var.prefix}"
+  env                                   = "${var.env}"
+  region                                = "${var.region}"
+  master_instance_type                  = var.master_instance_type
+  private_subnet_ids                    = "${module.vpc.private_subnet_ids}"
   k8s-master-nodes-private-subnet_sg_id = "${module.vpc.k8s_master_nodes_private_subnet_sg_id}"
 }
 
 # This is the actual kubernetes worker nodes module which creates worker nodes
 # Depends on the master node module
 module "worker-nodes" {
-  source                       			= "../k8s-worker-nodes"
-  prefix                       			= "${var.prefix}"
-  env                          			= "${var.env}"
-  region                       			= "${var.region}"
-  worker_instance_type	    		    = var.worker_instance_type
-  private_subnet_ids            		= "${module.vpc.private_subnet_ids}"
+  source                                = "../k8s-worker-nodes"
+  prefix                                = "${var.prefix}"
+  env                                   = "${var.env}"
+  region                                = "${var.region}"
+  worker_instance_type                  = var.worker_instance_type
+  private_subnet_ids                    = "${module.vpc.private_subnet_ids}"
   k8s-worker-nodes-private-subnet_sg_id = "${module.vpc.k8s_worker_nodes_private_subnet_sg_id}"
-  aws_account_id               			= "${data.aws_caller_identity.current.account_id}"
-  master_private_ip_addr				= module.master-nodes.master_private_ip_addr
-  asg_worker_nodes_min_size	   			= var.asg_worker_nodes_min_size
-  asg_worker_nodes_max_size	    	 	= var.asg_worker_nodes_max_size
+  aws_account_id                        = "${data.aws_caller_identity.current.account_id}"
+  master_private_ip_addr                = module.master-nodes.master_private_ip_addr
+  asg_worker_nodes_min_size             = var.asg_worker_nodes_min_size
+  asg_worker_nodes_max_size             = var.asg_worker_nodes_max_size
 }
 
 # This is the actual RDS module which creates the database
@@ -116,10 +116,10 @@ module "lambda" {
   env                          = "${var.env}"
   region                       = "${var.region}"
   vpc_id                       = "${module.vpc.vpc_id}"
-  private_subnet_ids       	   = "${module.vpc.private_subnet_ids}"
+  private_subnet_ids           = "${module.vpc.private_subnet_ids}"
   aws_account_id               = "${data.aws_caller_identity.current.account_id}"
   k8s-deployer-lambda-private-subnet_sg_id = "${module.vpc.k8s_deployer_lambda_private_subnet_sg_id}"
-  bastion_host				   = "${module.bastion.bastion_public_ip_addr}"
-  master_private_ip_addr	   = module.master-nodes.master_private_ip_addr
+  bastion_host                 = "${module.bastion.bastion_public_ip_addr}"
+  master_private_ip_addr       = module.master-nodes.master_private_ip_addr
   k8s_deployer_lambda_python_run_time = "${local.k8s_deployer_lambda_python_run_time}"
 }

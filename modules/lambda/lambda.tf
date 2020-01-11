@@ -77,7 +77,7 @@ resource "aws_lambda_function" "k8s_deployer_lambda" {
   function_name = "k8s_deployer_lambda"
   role          = aws_iam_role.iam_for_k8s_deployer_lambda.arn
   handler       = "script.worker_handler"
-  timeout		= 10
+  timeout       = 10
   
   source_code_hash = data.archive_file.k8s_deployer_lambda_zip_inline.output_base64sha256
 
